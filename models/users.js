@@ -6,10 +6,25 @@ module.exports = (sequelize, DataTypes) => {
   const users = sequelize.define(
     'users',
     {
-      fullName: DataTypes.STRING,
-      email: DataTypes.STRING,
-      password: DataTypes.STRING,
-      gender: DataTypes.STRING,
+      fullName: {
+        type: DataTypes.STRING,
+        notNull: true,
+        notEmpty: true,
+      },
+      email: {
+        type: DataTypes.STRING,
+        isEmail: true,
+      },
+      password: {
+        type: DataTypes.STRING,
+        notNull: true,
+        notEmpty: true,
+        min: 6,
+      },
+      gender: {
+        type: DataTypes.STRING,
+        isIn: [['male', 'female']],
+      },
       phone: {
         type: DataTypes.STRING,
         validate: {
