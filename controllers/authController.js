@@ -36,6 +36,7 @@ const createSendToken = async (user, statusCode, res) => {
   });
 };
 
+// TODO: Register
 exports.register = async function (req, res, next) {
   try {
     const users = await model.users.create(req.body);
@@ -51,6 +52,7 @@ exports.register = async function (req, res, next) {
   }
 };
 
+// TODO: Login
 exports.login = async (req, res, next) => {
   // 1) check if email and password are not filled
   if (!req.body.email || !req.body.password) {
@@ -71,6 +73,7 @@ exports.login = async (req, res, next) => {
   return createSendToken(user, 200, res);
 };
 
+// TODO: Logout
 exports.logout = async (req, res, next) => {
   // delete cookie
   res.clearCookie('jwt');

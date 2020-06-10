@@ -1,5 +1,6 @@
 const model = require('../models/index');
 
+// TODO: Get All Users
 exports.getUsers = async (req, res) => {
   try {
     const users = await model.users.findAll();
@@ -18,6 +19,7 @@ exports.getUsers = async (req, res) => {
   }
 };
 
+// TODO: Delete User
 exports.deleteUser = async (req, res) => {
   try {
     const users = await model.users.destroy({
