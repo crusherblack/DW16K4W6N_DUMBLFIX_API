@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   categories.associate = function (models) {
-    // associations can be defined here
+    categories.hasMany(models.films);
   };
   return categories;
 };

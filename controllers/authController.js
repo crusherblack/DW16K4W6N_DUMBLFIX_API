@@ -3,6 +3,7 @@ const { appError } = require('../utils/appError');
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const { promisify } = require('util');
 
 // TODO: Create token
 const signToken = async (id) => {
@@ -71,6 +72,38 @@ exports.login = async (req, res, next) => {
   }
   // 4) if user found, sind token
   return createSendToken(user, 200, res);
+};
+
+//TODO: Protect Middleware
+exports.protect = async (req, res, next) => {
+  // 1) Check if token exist
+  let token;
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
+
+  if (!token) {
+    return appError(res, 400, 'You are not logged in! Please log in to get access');
+  }
+
+  // 2) Verify token
+  const verify = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  // 3) Check if user exist
+  const user = await model.users.findOne({
+    where: { id: verify.id },
+  });
+
+  if (!user) {
+    return appError(res, 400, 'The user belonging this token does not exist');
+  }
+
+  req.user = user;
+  res.locals.user = user;
+
+  next();
 };
 
 // TODO: Logout
