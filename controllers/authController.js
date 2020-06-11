@@ -116,7 +116,7 @@ exports.logout = async (req, res, next) => {
 
 exports.allowTo = (...roles) => {
   return (req, res, next) => {
-    // roles :: ['admin', 'user']
+    // roles: ['admin', 'user']
 
     if (!roles.includes(req.user.role)) {
       return appError(res, 403, "You don't have permission to perform this action");

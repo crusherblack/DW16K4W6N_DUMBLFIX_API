@@ -32,9 +32,7 @@ exports.deleteUser = async (req, res) => {
     if (users > 0) {
       res.status(200).json({
         status: 'success',
-        data: {
-          id: req.params.id,
-        },
+        message: 'Data has been deleted successfully',
       });
     } else {
       appError(res, 400, `No data matches with your request`);
