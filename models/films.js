@@ -30,7 +30,11 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   films.associate = function (models) {
-    films.belongsTo(models.categories, { foreignKey: 'categoryId', as: 'category', onDelete: 'CASCADE' });
+    films.belongsTo(models.categories, {
+      foreignKey: 'categoryId',
+      as: 'category',
+      onDelete: 'CASCADE',
+    });
   };
   return films;
 };

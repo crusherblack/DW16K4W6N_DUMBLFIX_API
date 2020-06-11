@@ -1,9 +1,10 @@
-const model = require('../models/index');
+const { users: User } = require('../models/index');
+const { appError } = require('../utils/appError');
 
 // TODO: Get All Users
 exports.getUsers = async (req, res) => {
   try {
-    const users = await model.users.findAll();
+    const users = await User.findAll();
     res.status(200).json({
       status: 'success',
       data: {
@@ -22,17 +23,22 @@ exports.getUsers = async (req, res) => {
 // TODO: Delete User
 exports.deleteUser = async (req, res) => {
   try {
-    const users = await model.users.destroy({
+    const users = await User.destroy({
       where: {
         id: req.params.id,
       },
     });
-    res.status(200).json({
-      status: 'success',
-      data: {
-        id: req.params.id,
-      },
-    });
+
+    if (users > 0) {
+      res.status(200).json({
+        status: 'success',
+        data: {
+          id: req.params.id,
+        },
+      });
+    } else {
+      appError(res, 400, `No data matches with your request`);
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json({

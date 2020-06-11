@@ -1,4 +1,4 @@
-const model = require('../models/index');
+const { users: User } = require('../models/index');
 const { appError } = require('../utils/appError');
 
 const jwt = require('jsonwebtoken');
@@ -40,7 +40,7 @@ const createSendToken = async (user, statusCode, res) => {
 // TODO: Register
 exports.register = async function (req, res, next) {
   try {
-    const users = await model.users.create(req.body);
+    const users = await User.create(req.body);
     if (users) {
       createSendToken(users, 201, res);
     }
@@ -61,7 +61,7 @@ exports.login = async (req, res, next) => {
   }
 
   // 2) get user from database
-  const user = await model.users.findOne({
+  const user = await User.findOne({
     where: {
       email: req.body.email,
     },
@@ -92,7 +92,7 @@ exports.protect = async (req, res, next) => {
   const verify = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   // 3) Check if user exist
-  const user = await model.users.findOne({
+  const user = await User.findOne({
     where: { id: verify.id },
   });
 
@@ -112,4 +112,16 @@ exports.logout = async (req, res, next) => {
   res.clearCookie('jwt');
 
   res.redirect('/login');
+};
+
+exports.allowTo = (...roles) => {
+  return (req, res, next) => {
+    // roles :: ['admin', 'user']
+
+    if (!roles.includes(req.user.role)) {
+      return appError(res, 403, "You don't have permission to perform this action");
+    }
+
+    return next();
+  };
 };
