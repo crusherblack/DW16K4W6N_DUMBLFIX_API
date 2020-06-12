@@ -1,18 +1,17 @@
-const { categories: Category } = require('../models/index');
+const { films: Film, episodes: Episode } = require('../models/index');
 const { appError } = require('../utils/appError');
 
-// TODO: Get All Categories
-exports.getCategories = async (req, res) => {
+// TODO: Create a New Episode
+exports.createEpisode = async (req, res) => {
   try {
-    const categories = await Category.findAll();
+    const episode = await Episode.create(req.body);
     res.status(200).json({
       status: 'success',
       data: {
-        categories,
+        episode,
       },
     });
   } catch (err) {
-    console.log(err);
     res.status(400).json({
       status: 'error',
       message: err.message,
@@ -20,42 +19,20 @@ exports.getCategories = async (req, res) => {
   }
 };
 
-// TODO: Create Category
-exports.createCategory = async (req, res) => {
+// TODO: Update Episode
+exports.updateEpisode = async (req, res) => {
   try {
-    const category = await Category.create(req.body);
-    res.status(200).json({
-      status: 'success',
-      data: {
-        category,
-      },
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({
-      status: 'error',
-      message: err.message,
-    });
-  }
-};
-
-// TODO: Update Category
-exports.updateCategory = async (req, res) => {
-  try {
-    const category = await Category.update(req.body, {
+    const episode = await Episode.update(req.body, {
       where: {
         id: req.params.id,
       },
     });
 
-    if (category > 0) {
+    if (episode > 0) {
       res.status(200).json({
         status: 'success',
         data: {
-          category: {
-            id: req.params.id,
-            name: req.body.name,
-          },
+          episode: await Episode.findByPk(req.params.id),
         },
       });
     } else {
@@ -70,16 +47,16 @@ exports.updateCategory = async (req, res) => {
   }
 };
 
-// TODO: Delete Category
-exports.deleteCategory = async (req, res) => {
+// TODO: Delete Episode
+exports.deleteEpisode = async (req, res) => {
   try {
-    const category = await Category.destroy({
+    const episode = await Episode.destroy({
       where: {
         id: req.params.id,
       },
     });
 
-    if (category > 0) {
+    if (episode > 0) {
       res.status(200).json({
         status: 'success',
         message: `Data with id: ${req.params.id} has been deleted successfully`,
@@ -88,6 +65,7 @@ exports.deleteCategory = async (req, res) => {
       appError(res, 400, `No data matches with your request`);
     }
   } catch (err) {
+    console.log(err);
     res.status(400).json({
       status: 'error',
       message: err.message,

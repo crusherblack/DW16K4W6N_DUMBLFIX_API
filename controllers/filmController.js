@@ -1,4 +1,4 @@
-const { films: Film, categories: Category } = require('../models/index');
+const { films: Film, categories: Category, episodes: Episode } = require('../models/index');
 const { appError } = require('../utils/appError');
 
 // TODO: Get All Films
@@ -23,7 +23,7 @@ exports.getFilms = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(400).json({
       status: 'error',
       message: err.message,
     });
@@ -55,7 +55,7 @@ exports.getFilm = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(400).json({
       status: 'error',
       message: err.message,
     });
@@ -73,7 +73,7 @@ exports.createFilm = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(400).json({
       status: 'error',
       message: err.message,
     });
@@ -101,7 +101,7 @@ exports.updateFilm = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({
+    res.status(400).json({
       status: 'error',
       message: err.message,
     });
@@ -120,14 +120,81 @@ exports.deleteFilm = async (req, res) => {
     if (film > 0) {
       res.status(200).json({
         status: 'success',
-        message: 'Data has been deleted successfully',
+        message: `Data has with id: ${req.params.id} been deleted successfully`,
       });
     } else {
       appError(res, 400, `No data matches with your request`);
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({
+    res.status(400).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
+};
+
+// TODO: Get Episodes by Film
+exports.getEpisodesByFilm = async (req, res) => {
+  try {
+    const episodesByFilm = await Film.findOne({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        {
+          model: Episode,
+          as: 'episodes',
+          attributes: ['id', 'title', 'thumbnailEp', 'linkEp'],
+        },
+      ],
+      attributes: {
+        exclude: ['createdAt', 'updatedAt'],
+      },
+    });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        film: episodesByFilm,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
+};
+
+// TODO: Get Episode by Film
+exports.getEpisodeByFilm = async (req, res) => {
+  try {
+    const episodesByFilm = await Episode.findOne({
+      where: {
+        id: req.params.idEp,
+      },
+      include: [
+        {
+          model: Film,
+          as: 'film',
+          attributes: ['id', 'title', 'thumbnailFilm', 'year', 'categoryId', 'description'],
+          where: {
+            id: req.params.idFilm,
+          },
+        },
+      ],
+      attributes: {
+        exclude: ['createdAt', 'updatedAt'],
+      },
+    });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        episode: episodesByFilm,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
       status: 'error',
       message: err.message,
     });

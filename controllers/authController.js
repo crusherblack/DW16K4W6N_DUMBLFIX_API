@@ -85,7 +85,7 @@ exports.protect = async (req, res, next) => {
   }
 
   if (!token) {
-    return appError(res, 400, 'You are not logged in! Please log in to get access');
+    return appError(res, 401, 'You are not logged in! Please log in to get access');
   }
 
   // 2) Verify token
@@ -97,7 +97,7 @@ exports.protect = async (req, res, next) => {
   });
 
   if (!user) {
-    return appError(res, 400, 'The user belonging this token does not exist');
+    return appError(res, 401, 'The user belonging this token does not exist');
   }
 
   req.user = user;
@@ -110,8 +110,6 @@ exports.protect = async (req, res, next) => {
 exports.logout = async (req, res, next) => {
   // delete cookie
   res.clearCookie('jwt');
-
-  res.redirect('/login');
 };
 
 exports.allowTo = (...roles) => {

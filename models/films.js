@@ -33,7 +33,11 @@ module.exports = (sequelize, DataTypes) => {
     films.belongsTo(models.categories, {
       foreignKey: 'categoryId',
       as: 'category',
+    });
+
+    films.hasMany(models.episodes, {
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
   };
   return films;

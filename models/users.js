@@ -48,7 +48,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   users.associate = function (models) {
-    users.hasMany(models.transactions);
+    users.hasMany(models.transactions, {
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   };
   return users;
 };

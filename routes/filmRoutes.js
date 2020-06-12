@@ -12,4 +12,7 @@ router
   .patch(filmController.updateFilm)
   .delete(filmController.deleteFilm);
 
+router.route('/:id/episodes').get(filmController.getEpisodesByFilm);
+router.route('/:idFilm/episodes/:idEp').get(filmController.getEpisodeByFilm);
+
 module.exports = router;

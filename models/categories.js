@@ -12,7 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   categories.associate = function (models) {
-    categories.hasMany(models.films);
+    categories.hasMany(models.films, {
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   };
   return categories;
 };
