@@ -1,15 +1,15 @@
-const { films: Film, categories: Category } = require('../models/index');
+const { transactions: Transaction, users: User } = require('../models/index');
 const { appError } = require('../utils/appError');
 
-// TODO: Get All Films
-exports.getFilms = async (req, res) => {
+// TODO: Get All Transactions
+exports.getTransactions = async (req, res) => {
   try {
-    const films = await Film.findAll({
+    const transactions = await Transaction.findAll({
       include: [
         {
-          model: Category,
-          as: 'category',
-          attributes: ['id', 'name'],
+          model: User,
+          as: 'user',
+          attributes: ['id', 'fullName', 'email', 'phone'],
         },
       ],
       attributes: {
@@ -19,7 +19,7 @@ exports.getFilms = async (req, res) => {
     res.status(200).json({
       status: 'success',
       data: {
-        films,
+        transactions,
       },
     });
   } catch (err) {
@@ -30,10 +30,10 @@ exports.getFilms = async (req, res) => {
   }
 };
 
-// TODO: Get All Film
-exports.getFilm = async (req, res) => {
+// TODO: Get All Transaction
+exports.getTransaction = async (req, res) => {
   try {
-    const film = await Film.findOne({
+    const transaction = await Transaction.findOne({
       include: [
         {
           model: Category,
@@ -51,7 +51,7 @@ exports.getFilm = async (req, res) => {
     res.status(200).json({
       status: 'success',
       data: {
-        film,
+        transaction,
       },
     });
   } catch (err) {
@@ -62,14 +62,14 @@ exports.getFilm = async (req, res) => {
   }
 };
 
-// TODO: Create a New Film
-exports.createFilm = async (req, res) => {
+// TODO: Create a New Transaction
+exports.createTransaction = async (req, res) => {
   try {
-    const film = await Film.create(req.body);
+    const transaction = await Transaction.create(req.body);
     res.status(200).json({
       status: 'success',
       data: {
-        film,
+        transaction,
       },
     });
   } catch (err) {
@@ -80,25 +80,22 @@ exports.createFilm = async (req, res) => {
   }
 };
 
-// TODO: Update Category
-exports.updateFilm = async (req, res) => {
+// TODO: Update Transaction
+exports.updateTransaction = async (req, res) => {
   try {
-    const film = await Film.update(req.body, {
+    const transaction = await Transaction.update(req.body, {
       where: {
         id: req.params.id,
       },
+      returning: true,
     });
 
-    if (film > 0) {
-      res.status(200).json({
-        status: 'success',
-        data: {
-          film: await Film.findByPk(req.params.id),
-        },
-      });
-    } else {
-      appError(res, 400, `No data matches with your request`);
-    }
+    res.status(200).json({
+      status: 'success',
+      data: {
+        transaction: await Transaction.findByPk(req.params.id),
+      },
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -108,16 +105,16 @@ exports.updateFilm = async (req, res) => {
   }
 };
 
-// TODO: Delete User
-exports.deleteFilm = async (req, res) => {
+// TODO: Delete Transaction
+exports.deleteTransaction = async (req, res) => {
   try {
-    const film = await Film.destroy({
+    const transaction = await Transaction.destroy({
       where: {
         id: req.params.id,
       },
     });
 
-    if (film > 0) {
+    if (transaction > 0) {
       res.status(200).json({
         status: 'success',
         message: 'Data has been deleted successfully',
