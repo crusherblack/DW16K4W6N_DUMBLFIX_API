@@ -3,12 +3,10 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../controllers/userControllers');
-const authController = require('../controllers/authController');
+const { protect, allowTo } = require('../controllers/authController');
 
-router
-  .route('/')
-  .get(authController.protect, authController.allowTo('admin'), userController.getUsers);
+router.route('/').get(protect, allowTo('admin'), userController.getUsers);
 
-router.route('/:id').delete(userController.deleteUser);
+router.route('/:id').delete(protect, userController.deleteUser);
 
 module.exports = router;

@@ -3,16 +3,16 @@ const express = require('express');
 const router = express.Router();
 
 const categoryController = require('../controllers/categoryController');
-const authController = require('../controllers/authController');
+const { protect, allowTo } = require('../controllers/authController');
 
 router
   .route('/')
   .get(categoryController.getCategories)
-  .post(authController.protect, categoryController.createCategory);
+  .post(protect, allowTo('admin'), categoryController.createCategory);
 
 router
   .route('/:id')
-  .patch(categoryController.updateCategory)
-  .delete(authController.protect, categoryController.deleteCategory);
+  .patch(protect, allowTo('admin'), categoryController.updateCategory)
+  .delete(protect, allowTo('admin'), categoryController.deleteCategory);
 
 module.exports = router;

@@ -3,16 +3,17 @@ const express = require('express');
 const router = express.Router();
 
 const transactionController = require('../controllers/transactionController');
+const { protect, allowTo } = require('../controllers/authController');
 
 router
   .route('/')
   .get(transactionController.getTransactions)
-  .post(transactionController.createTransaction);
+  .post(protect, transactionController.createTransaction);
 
 router
   .route('/:id')
   .get(transactionController.getTransaction)
-  .patch(transactionController.updateTransaction)
-  .delete(transactionController.deleteTransaction);
+  .patch(protect, transactionController.updateTransaction)
+  .delete(protect, transactionController.deleteTransaction);
 
 module.exports = router;
