@@ -1,5 +1,6 @@
 const { appError } = require('./utils/appError');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 
 const express = require('express');
 const app = express();
@@ -7,6 +8,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 const userRouter = require('./routes/userRoutes');
 const authRouter = require('./routes/authRoutes');

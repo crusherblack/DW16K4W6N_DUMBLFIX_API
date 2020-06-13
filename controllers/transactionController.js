@@ -1,5 +1,6 @@
 const { transactions: Transaction, users: User } = require('../models/index');
 const { appError } = require('../utils/appError');
+// const multer = require('multer');
 
 // TODO: Get All Transactions
 exports.getTransactions = async (req, res) => {
@@ -64,6 +65,7 @@ exports.getTransaction = async (req, res) => {
 
 // TODO: Create a New Transaction
 exports.createTransaction = async (req, res) => {
+  if (req.file) req.body.attachment = req.file.filename;
   try {
     const transaction = await Transaction.create(req.body);
     res.status(200).json({
