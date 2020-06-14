@@ -1,4 +1,4 @@
-const { categories: Category } = require('../models/index');
+const { categories: Category, films: Film } = require('../models/index');
 const { appError } = require('../utils/appError');
 
 // TODO: Get All Categories
@@ -87,6 +87,38 @@ exports.deleteCategory = async (req, res) => {
     } else {
       appError(res, 400, `No data matches with your request`);
     }
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
+};
+
+// TODO: Get Films by Category
+exports.getFilmsByCategory = async (req, res) => {
+  try {
+    const filmsByCategory = await Category.findOne({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        {
+          model: Film,
+          as: 'films',
+          attributes: ['id', 'title', 'thumbnailFilm', 'year', 'description'],
+        },
+      ],
+      attributes: {
+        exclude: ['createdAt', 'updatedAt'],
+      },
+    });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        category: filmsByCategory,
+      },
+    });
   } catch (err) {
     res.status(400).json({
       status: 'error',

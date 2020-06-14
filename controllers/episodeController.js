@@ -3,6 +3,7 @@ const { appError } = require('../utils/appError');
 
 // TODO: Create a New Episode
 exports.createEpisode = async (req, res) => {
+  if (req.file) req.body.thumbnailEp = req.file.filename;
   try {
     const episode = await Episode.create(req.body);
     res.status(200).json({

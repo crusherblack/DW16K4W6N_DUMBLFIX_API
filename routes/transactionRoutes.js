@@ -4,12 +4,16 @@ const router = express.Router();
 
 const transactionController = require('../controllers/transactionController');
 const { protect, allowTo } = require('../controllers/authController');
-const { uploadImage } = require('../utils/uploadImage');
+const { uploadSingle } = require('../utils/uploadImage');
 
 router
   .route('/')
   .get(transactionController.getTransactions)
-  .post(protect, uploadImage('attachment'), transactionController.createTransaction);
+  .post(
+    protect,
+    uploadSingle('transaction', 'attachment'),
+    transactionController.createTransaction
+  );
 
 router
   .route('/:id')

@@ -64,6 +64,7 @@ exports.getFilm = async (req, res) => {
 
 // TODO: Create a New Film
 exports.createFilm = async (req, res) => {
+  if (req.file) req.body.thumbnailFilm = req.file.filename;
   try {
     const film = await Film.create(req.body);
     res.status(200).json({

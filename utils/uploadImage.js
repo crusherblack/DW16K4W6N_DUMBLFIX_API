@@ -1,35 +1,35 @@
 const multer = require('multer');
 const { appError } = require('../utils/appError');
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './public/images/');
-  },
-  filename: function (req, file, cb) {
-    const imageFormat = file.mimetype.split('/')[1];
-    const fileName = `transaction-${Date.now()}.${imageFormat}`;
-    cb(null, fileName);
-  },
-});
+exports.uploadSingle = (table, fileInput) => {
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './public/images/');
+    },
+    filename: function (req, file, cb) {
+      const imageFormat = file.mimetype.split('/')[1];
+      const fileName = `${table}-${Date.now()}.${imageFormat}`;
+      cb(null, fileName);
+    },
+  });
 
-const fileFilter = (req, file, cb) => {
-  // File format
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
+  const fileFilter = (req, file, cb) => {
+    // File format
+    if (file.mimetype.startsWith('image')) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  };
 
-const uploadConfig = multer({
-  storage,
-  fileFilter,
-  limits: {
-    fileSize: 5000000,
-  },
-});
+  const uploadConfig = multer({
+    storage,
+    fileFilter,
+    limits: {
+      fileSize: 5000000,
+    },
+  });
 
-exports.uploadImage = (fileInput) => {
   return (req, res, next) => {
     const upload = uploadConfig.single(fileInput);
 

@@ -4,11 +4,17 @@ const router = express.Router();
 
 const filmController = require('../controllers/filmController');
 const { protect, allowTo } = require('../controllers/authController');
+const { uploadSingle } = require('../utils/uploadImage');
 
 router
   .route('/')
   .get(filmController.getFilms)
-  .post(protect, allowTo('admin'), filmController.createFilm);
+  .post(
+    protect,
+    allowTo('admin'),
+    uploadSingle('film', 'thumbnailFilm'),
+    filmController.createFilm
+  );
 
 router
   .route('/:id')

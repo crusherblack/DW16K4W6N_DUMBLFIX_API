@@ -15,4 +15,6 @@ router
   .patch(protect, allowTo('admin'), categoryController.updateCategory)
   .delete(protect, allowTo('admin'), categoryController.deleteCategory);
 
+router.route('/:id/films').get(categoryController.getFilmsByCategory);
+
 module.exports = router;
